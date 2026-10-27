@@ -1,13 +1,12 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { superForm } from 'sveltekit-superforms/client';
-  import { zod } from 'sveltekit-superforms/adapters';
+  import type { SuperValidated } from 'sveltekit-superforms';
   import { contactSchema, type ContactFormData } from '$lib/utils/validation';
   import Input from '../ui/Input.svelte';
   import Button from '../ui/Button.svelte';
   import type { CreateContactRequest, UpdateContactRequest } from '$lib/api/types';
 
-  export let initialData: Partial<ContactFormData> = {};
+  export let form: SuperValidated<ContactFormData>;
   export let mode: 'create' | 'edit' = 'create';
   export let loading = false;
 
@@ -16,13 +15,13 @@
     cancel: void;
   }>();
 
-  const { form, errors, valid, enhance } = await superForm(initialData, {
-    validator: zod(contactSchema),
-  });
+  // Access reactive values
+  $: formValue = $form;
+  $: formErrors = $errors;
+  $: formValid = $valid;
 
   function handleSubmit() {
-    const formValue = $form;
-    const isValid = $valid;
+    const isValid = formValid;
     if (!isValid) return;
 
     const data: CreateContactRequest | UpdateContactRequest = {
@@ -49,82 +48,82 @@
     <div class="col-md-6">
       <Input
         label="First Name"
-        bind:value={$form.first_name}
+        bind:value={formValue.first_name}
         name="first_name"
         required
         placeholder="John"
-        error={$errors.first_name?.[0]}
+        error={formErrors.first_name?.[0]}
       />
     </div>
     <div class="col-md-6">
       <Input
         label="Last Name"
-        bind:value={$form.last_name}
+        bind:value={formValue.last_name}
         name="last_name"
         required
         placeholder="Doe"
-        error={$errors.last_name?.[0]}
+        error={formErrors.last_name?.[0]}
       />
     </div>
     <div class="col-md-6">
       <Input
         label="Email"
         type="email"
-        bind:value={$form.email}
+        bind:value={formValue.email}
         name="email"
         required
         placeholder="john.doe@example.com"
-        error={$errors.email?.[0]}
+        error={formErrors.email?.[0]}
       />
     </div>
     <div class="col-md-6">
       <Input
         label="Phone"
         type="tel"
-        bind:value={$form.phone}
+        bind:value={formValue.phone}
         name="phone"
         placeholder="+1-555-0123"
-        error={$errors.phone?.[0]}
+        error={formErrors.phone?.[0]}
       />
     </div>
     <div class="col-12">
       <Input
         label="Address"
         as="textarea"
-        bind:value={$form.address}
+        bind:value={formValue.address}
         name="address"
         placeholder="123 Main St, City, State"
         rows={2}
-        error={$errors.address?.[0]}
+        error={formErrors.address?.[0]}
       />
     </div>
     <div class="col-md-6">
       <Input
         label="Company"
-        bind:value={$form.company}
+        bind:value={formValue.company}
         name="company"
         placeholder="Acme Corp"
-        error={$errors.company?.[0]}
+        error={formErrors.company?.[0]}
       />
     </div>
     <div class="col-md-6">
       <Input
         label="Job Title"
-        bind:value={$form.job_title}
+        bind:value={formValue.job_title}
         name="job_title"
         placeholder="Software Engineer"
-        error={$errors.job_title?.[0]}
+        error={formErrors.job_title?.[0]}
       />
     </div>
     <div class="col-12">
       <Input
         label="Notes"
         as="textarea"
-        bind:value={$form.notes}
+        bind:value={formValue.notes}
         name="notes"
         placeholder="Additional notes..."
         rows={4}
-        error={$errors.notes?.[0]}
+        error={formErrors.notes?.[0]}
       />
     </div>
   </div>

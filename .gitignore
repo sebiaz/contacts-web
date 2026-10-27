@@ -35,3 +35,24 @@ coverage/
 # Misc
 *.tgz
 .cache/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+temp/
+
+# Profiling
+*.prof
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

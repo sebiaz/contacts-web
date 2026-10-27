@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { superForm } from 'sveltekit-superforms/client';
-  import { contactSchema } from '$lib/utils/validation';
   import { goto } from '$app/navigation';
   import ContactForm from '$lib/components/contacts/ContactForm.svelte';
   import { page } from '$app/stores';
@@ -9,8 +7,6 @@
     form: import('sveltekit-superforms').SuperValidated<import('$lib/utils/validation').ContactFormData>;
     contact: import('$lib/api/types').Contact;
   };
-
-  const form = await superForm(data.form);
 </script>
 
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
@@ -34,7 +30,7 @@
 {/if}
 
 <ContactForm
-  bind:form
+  initialData={data.form}
   mode="edit"
   on:cancel={() => goto(`/contacts/${data.contact.id}`)}
 />
